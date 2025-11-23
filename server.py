@@ -18,14 +18,18 @@ NOTES_FILE="my_notes.json"
 
 def load_notes()-> dict:
     notes_path = Path(NOTES_FILE)
+    if not notes_path.exists():
+        with open(notes_path, "w") as f:
+            f.write("{}")
     if notes_path.exists():
         with open(notes_path, "r") as f:
             return json.load(f)
     return {}
 
+
 def save_notes(notes: dict):
     notes_path = Path(NOTES_FILE)
-    with open(notes_path, "r") as f:
+    with open(notes_path, "w") as f:  # Changed mode from 'r' to 'w'
         f.write(json.dumps(notes, indent=2))
         # NOTES_FILE.write_text(json.dump(notes,indent=2))
 
@@ -65,14 +69,22 @@ def list_notes() -> str:
         return "No notes available."
 
 
-
+# Resource Templates resource/template/list
 @notes_mcp.resource("resource://{name}")
-def get_note(name: str) -> str:
+def get_note_resource(name: str) -> str:
     notes=load_notes()
     if name in notes:
         return notes[name]
     else:
         return f"Note '{name}' does not exist."
+
+
+# Resource Templates resource/template/list
+@notes_mcp.resource("resource://reference")
+def reference_resource() -> str:
+    notes=load_notes()
+    return notes
+
 
 @notes_mcp.prompt()
 def summarize_note(name: str) -> str:
