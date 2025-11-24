@@ -9,7 +9,7 @@ from mcp.server import FastMCP
 import json
 from pathlib import Path
 
-notes_mcp = FastMCP(name="Note MCP Server")
+notes_mcp = FastMCP(name="Note MCP Server",host="127.0.0.1",port=7000)
 
 
 # create a file my_notes.json that contains a list of notes
@@ -92,3 +92,9 @@ def summarize_note(name: str) -> str:
     if name in notes:
         return f"Here is the note summarize it in 10 words or less:\n\n{notes[name]}"
     return f"Note '{name}' nto found."
+
+
+
+
+if __name__ == "__main__":
+    notes_mcp.run(transport="streamable-http")

@@ -3,14 +3,15 @@
 from mcp.client.stdio import stdio_client
 from mcp import ClientSession,StdioServerParameters,types
 from pydantic import AnyUrl
-
+from mcp.client.streamable_http import streamablehttp_client
 
 
 server_params = StdioServerParameters(command="uv",
                                       args=["run","mcp", "run", "server.py:notes_mcp"])
 
 async def run():
-    async with stdio_client(server_params) as (read,write):
+    # async with stdio_client(server_params) as (read,write):
+    async with streamablehttp_client(url="http://127.0.0.1:7000/mcp") as (read,write,_):
         async with ClientSession(read,write) as sessions:
             
             await sessions.initialize()
